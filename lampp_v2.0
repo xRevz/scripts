@@ -1,0 +1,25 @@
+#!/bin/bash
+#Script Created By Revz
+echo "Instalando repositorio php..."
+
+add-apt-repository ppa:revz/ppa
+apt-get update
+sudo apt-get install php5.6 libapache2-mod-php5.6 php5.6-mcrypt php5.6-mysql
+echo "Instalação php 5.6 finalizada!"
+
+apt-get install apache2
+echo "Configurando apache..."
+read -a ip -p "Informe o Ip ou dominio referente ao servidor."
+echo  ServerName "$ip" >> /etc/apache2/apache2.conf
+apache2ctl configtest
+
+service apache2 restart
+echo "Permitindo tráfego de entrada para o perfil "Apache Full""
+ufw allow in "Apache Full"
+
+sed 's/index.html/index.php/' /etc/apache2/mods-enabled/dir.conf
+sed 's/( .*\ )index.php/\index.html/' /etc/apache2/mods-enabled/dir.conf
+
+echo "Instalando MySQL Server."
+apt-get install mysql-server
+
